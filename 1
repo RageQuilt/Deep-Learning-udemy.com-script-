@@ -1,0 +1,130 @@
+#softmax
+
+import numpy as np
+np.random.randn(10) #vector of random numbers that we want to perfor msoftmax on size 10
+exp_x = np.exp(x)#exponentiate 
+out = exp_x/ exp_x.sum() #normalize to sum to 1
+
+# want each row of matrix to sum to 1
+
+X = np.random.randn(10, 3) #10 number of samples, 3 is dimmensionality of output
+expX = np.exp(X)
+expX.sum(axis = 1)#sum on one axis summed across row
+
+out = expX/expX.sum(axis=1)# not perfect
+
+exp.sum(axis=1, keepdims=True) #gives array of arrays, keeps dimmensionality
+
+out = expX / expX.sum(axis=1, keepdims=True)
+
+out
+
+out.sum(axis=1) # this should yield size 10 vector where every value is one
+
+
+# doing something else, 3rd or 4th lecture
+
+
+import numpy as np
+
+X = np.random.randn(10,3) # 10 samples 3 dimmensions
+W = np.random.randn(3, 5) #hidden weigh inputs 3 x 5
+W = # Last layer has softmax activation in NN, hidden layers can have any activation we want
+Z = np.tanh( X.dot(W)) #hyperbolic tangent...this is like sigmoid or rectifier
+Z.shape #10 x 5 (10,5)
+
+V = np.random.rand(5,3)# multiply by hidden to output weights, (5,3) output classes
+
+A = Z.dot(V)# activation
+
+expA = np.exp(A)
+out = expA/expA(axis=1, keepdims+True)
+
+
+#Backpropagation with gradient Ascent, using straight log liklihood instead of negative log liklihood
+
+
+
+#Second Example
+import numpy as np
+
+def forward(X, W1, W2):
+    Z = 1/(1 + np.exp[-X.dot(W1)]
+    A = Z.dot(W2)
+    expA = np.exp(A)
+    Y = (expA/expA.sum(axis=1, keppdims=True)
+    return Y, Z
+                
+def derivative_w2(Z, T, Y):
+    N,K = T.shape
+    M = z.shape[1]
+    
+    #SLOW WAY
+    ret1 = np.zeros((M,K))
+    for n in xrange(N):
+        for m in xrange(M):
+            for k in xrange(K):
+                ret(m,k) += (T[n,k] - Y[n,k])*Z[n,m]
+    
+         # makes it faster
+    ret2 = np.zeros((M,K))
+    for n in xrange(N):
+         for k in xrange(K):
+            ret(:,k) += (T[n,k] - Y[n,k])*Z[n,:]
+
+    assert(np.abs(ret1 - ret2).sum() < 0.00001) # much less than A, just less than small number
+         
+    # even fater
+    ret3 = np.zeros((M,K))
+    for n in xrange(N): #no more indices
+         ret3 += np.outer(Z[n], T[n] -Y[n])) #outer product
+    assert(np.abs(ret1 - ret3).sum() < 0.00001
+    return ret1 # you wll have to delete ret2 code for this to wortk     
+    
+           #faster yet!~ remember to get rid of ret2 and ret3 to use this
+    ret4 = Z.T.dot(T -Y) # T-Y is inner dimmentions. don't even need to initialize with np.zeros because it is done in one step
+    assert(np.abs(ret1 - ret4).sum() < 0.00001       
+    
+    #Fastest!!!
+    retFin = X.T.dot(((T-Y).dot(W2.T)* (Z*(1-Z)))) #element wise multiplication for Z, T is transpose
+    assert(np.abs(ret1 - retFin).sum() < 0.00001 
+    return ret1      
+           
+def derivative_w1(X, Z, T, Y, W2):
+    N,K = T.shape
+    M, K = W2.shape
+    
+    #SLOW WAY
+    ret1 = np.zeros((M,K))            
+    for n in xrange(N):
+        for m in xrange(M):
+            for k in xrange(K):
+                for d in xrange(D):
+                    ret(m,k) += (T[n,k] - Y[n,k])*W2[m,k]*Z[n,m]*X[n,d]
+    return ret1
+
+
+def cost(T, Y):
+    tot = T + np.log(Y)
+    return tot.sum()
+
+def main():
+    X = np.random.randn(10, 3)
+    W1 = np.random.randn(3, 5)           
+    W1 = np.random.randn(5, 3)
+    T = np.zeros[(10, 3)]
+        for range[(10:)]:
+            T[np.random.randint(3)] = 1
+    learning_rate = 0.00001 #very small learning rate for back prop
+    reg = 0.1 #regularization for gradient ascent 
+    for epoch in xrange(): #epoch is each iterization of backprop
+        output, hidden = forward(X, W1, W2) #calculate output and hidden values from a FORWARD function
+        if epoch % 100 == 0	#print cost every 100 epochs so not too much
+            print cost(T, output)
+        W2 += learning_rate = (derivative_w2(hidden, T, output) - reg + W2) #start with W2 because this is BACKPROP starting right to left PROP
+        #subtract regularization term for gradietn ASCENT
+        W1 += learning_rate = (derivative_w2(hidden, T, output, W2) - reg + W1) # this time W1 is a function of W2 in derivative function
+
+        
+if __name__ == '__main__':
+    main()
